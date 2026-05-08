@@ -1,13 +1,16 @@
 package com.beaglescheduler.cmpe172project.controller;
 
+import com.beaglescheduler.cmpe172project.model.AppUser;
 import com.beaglescheduler.cmpe172project.model.AvailabilitySlot;
 import com.beaglescheduler.cmpe172project.model.Appointment;
+import com.beaglescheduler.cmpe172project.repository.AppUserRepository;
 import com.beaglescheduler.cmpe172project.service.AppointmentService;
 import com.beaglescheduler.cmpe172project.service.SlotService;
 import com.beaglescheduler.cmpe172project.service.SlotUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +26,14 @@ public class AppointmentController {
 
     private final SlotService slotService;
     private final AppointmentService appointmentService;
+    private final AppUserRepository userRepo;
 
-    public AppointmentController(SlotService slotService, AppointmentService appointmentService) {
+    public AppointmentController(SlotService slotService,
+                                 AppointmentService appointmentService,
+                                 AppUserRepository userRepo) {
         this.slotService = slotService;
         this.appointmentService = appointmentService;
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/slots")
@@ -78,5 +85,18 @@ public class AppointmentController {
     public String listAppointments(Model model) {
         model.addAttribute("appointments", appointmentService.getAllAppointments());
         return "appointments";
+    }
+
+    @GetMapping("/my-appointments")
+    public String myAppointments(Authentication auth, Model model) {
+        String email = auth.getName();
+        AppUser user = userRepo.findByEmail(email).orElse(null);
+        if (user == null) {
+            model.addAttribute("appointments", List.of());
+        } else {
+            model.addAttribute("appointments",
+                appointmentService.getAppointmentsForCustomer(user.getUserId()));
+        }
+        return "my-appointments";
     }
 }

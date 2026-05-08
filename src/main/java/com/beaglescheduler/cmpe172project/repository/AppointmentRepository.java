@@ -108,4 +108,9 @@ public class AppointmentRepository {
         return jdbc.query(JOIN_SQL + "WHERE a.assigned_technician_id = ? ORDER BY a.booked_at DESC",
             ROW_MAPPER, techId);
     }
+
+    public List<Appointment> findByCustomer(long customerId) {
+        return jdbc.query(JOIN_SQL + "WHERE a.customer_id = ? ORDER BY a.booked_at DESC",
+            ROW_MAPPER, customerId);
+    }
 }

@@ -1,0 +1,295 @@
+<mxfile host="app.diagrams.net" version="21.0">
+  <diagram id="beagle-arch" name="BeagleScheduler Architecture">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== TITLE ===== -->
+        <mxCell id="title" value="BeagleScheduler — System Architecture"
+          style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=16;"
+          vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="1125" height="32" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== LAYER BACKGROUND STRIPS ===== -->
+        <mxCell id="bg1" value="" style="rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="10" y="50" width="130" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg2" value="" style="rounded=0;fillColor=#fff2cc;strokeColor=#d6b656;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="150" y="50" width="165" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg3" value="" style="rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="325" y="50" width="215" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg4" value="" style="rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="550" y="50" width="185" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg5" value="" style="rounded=0;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="745" y="50" width="185" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="bg6" value="" style="rounded=0;fillColor=#f8cecc;strokeColor=#b85450;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="940" y="50" width="195" height="680" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== LAYER LABELS ===== -->
+        <mxCell id="lbl1" value="Clients" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="10" y="57" width="130" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl2" value="Spring Security" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="150" y="57" width="165" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl3" value="Controllers (Spring MVC)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="325" y="57" width="215" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl4" value="Service Layer" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="550" y="57" width="185" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl5" value="Repositories (JdbcTemplate)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="745" y="57" width="185" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl6" value="Database" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="57" width="195" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== CLIENTS ===== -->
+        <mxCell id="c_customer" value="Customer&#xa;(Browser)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="90" width="110" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_admin" value="Admin&#xa;(Browser)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="210" width="110" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_tech" value="Technician&#xa;(Browser)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="340" width="110" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c_apiclient" value="API Client&#xa;(OAuth2 Flow)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="530" width="110" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== SPRING SECURITY ===== -->
+        <mxCell id="s_web" value="Web Filter Chain&#xa;Form Login + Session&#xa;Role-based access&#xa;(ADMIN / TECHNICIAN&#xa;/ CUSTOMER roles)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="160" y="90" width="145" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_oauth_rs" value="OAuth2 Resource&#xa;Server Filter&#xa;Validates JWT Bearer&#xa;(protects /add)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="160" y="480" width="145" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_authserver" value="Authorization Server&#xa;POST /oauth2/token&#xa;client_credentials&#xa;RSA-signed JWT"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="160" y="595" width="145" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== CONTROLLERS ===== -->
+        <mxCell id="ctrl_appt" value="AppointmentController&#xa;GET /slots&#xa;GET+POST /book&#xa;GET /appointments&#xa;GET /my-appointments&#xa;GET /confirmation"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="335" y="90" width="195" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl_admin" value="AdminController&#xa;GET /admin/dashboard&#xa;GET /admin/slots&#xa;POST /admin/slots/add&#xa;POST /admin/slots/{id}/delete&#xa;POST /admin/cancel/{id}"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="335" y="250" width="195" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl_tech" value="TechnicianController&#xa;GET /technician/dashboard&#xa;POST /technician/ready/{id}"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="335" y="410" width="195" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl_math" value="MathController&#xa;GET /add?a=&amp;b=&#xa;(Bearer JWT required)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="335" y="530" width="195" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl_note" value="All responses: Thymeleaf&#xa;HTML templates (server-side)"
+          style="text;html=1;strokeColor=#82b366;fillColor=#f9fff9;align=left;fontSize=9;whiteSpace=wrap;rounded=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="335" y="635" width="195" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== SERVICES ===== -->
+        <mxCell id="svc_appt" value="AppointmentService&#xa;bookAppointment() &#xa;  (atomic slot lock)&#xa;cancelAppointment()&#xa;markMachineReady()&#xa;getAllAppointments()&#xa;getAppointmentsForCustomer()&#xa;getAppointmentsForTechnician()"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="560" y="90" width="165" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_slot" value="SlotService&#xa;getAvailableSlots()&#xa;getAllSlots()&#xa;getAllMachines()&#xa;createSlot()&#xa;deleteSlot()"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="560" y="290" width="165" height="115" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_metrics" value="BookingMetricsService&#xa;recordSuccess(latencyMs)&#xa;recordFailure()"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="560" y="465" width="165" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== REPOSITORIES ===== -->
+        <mxCell id="repo_appt" value="AppointmentRepository&#xa;save()  findAll()&#xa;findById()&#xa;findByCustomer()&#xa;findByAssignedTechnician()&#xa;cancelAppointment()&#xa;assignTechnician()"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="755" y="90" width="165" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_slot" value="AvailabilitySlotRepository&#xa;findAvailable()&#xa;findAll()  findById()&#xa;findAllMachines()&#xa;markUnavailable()&#xa;createSlot()  deleteSlot()"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="755" y="275" width="165" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_user" value="AppUserRepository&#xa;findByEmail()&#xa;findById()&#xa;findByRole()&#xa;findAll()&#xa;save() (upsert by email)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="755" y="455" width="165" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== DATABASE ===== -->
+        <mxCell id="db_h2" value="H2 In-Memory DB&#xa;jdbc:h2:mem:testdb"
+          style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="963" y="90" width="148" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_tables" value="Tables:&#xa;  users&#xa;  machines&#xa;  services&#xa;  availability_slots&#xa;  appointments"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="955" y="198" width="165" height="115" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_info" value="DDL: schema.sql&#xa;Seed: data.sql&#xa;Console: /h2-console&#xa;Dialect: create-drop"
+          style="text;html=1;strokeColor=#b85450;fillColor=none;align=left;fontSize=9;whiteSpace=wrap;rounded=0;"
+          vertex="1" parent="1">
+          <mxGeometry x="958" y="328" width="162" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Clients → Security ===== -->
+        <mxCell id="a1" value="HTTP / form"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="c_customer" target="s_web" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="c_admin" target="s_web" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="c_tech" target="s_web" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" value="Basic auth"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=9;"
+          edge="1" source="c_apiclient" target="s_authserver" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a5" value="Bearer JWT"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=9;"
+          edge="1" source="c_apiclient" target="s_oauth_rs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Security → Controllers ===== -->
+        <mxCell id="a6" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="s_web" target="ctrl_appt" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a7" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="s_web" target="ctrl_admin" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a8" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;"
+          edge="1" source="s_web" target="ctrl_tech" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a9" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="s_oauth_rs" target="ctrl_math" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Controllers → Services ===== -->
+        <mxCell id="a10" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="ctrl_appt" target="svc_appt" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a11" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="ctrl_appt" target="svc_slot" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a12" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="ctrl_admin" target="svc_appt" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a13" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="ctrl_admin" target="svc_slot" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a14" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="ctrl_tech" target="svc_appt" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Services → Repositories ===== -->
+        <mxCell id="a15" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="svc_appt" target="repo_appt" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a16" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="svc_appt" target="repo_slot" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a17" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="svc_appt" target="repo_user" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a18" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="svc_slot" target="repo_slot" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a19" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="svc_appt" target="svc_metrics" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== ARROWS: Repositories → Database ===== -->
+        <mxCell id="a20" value="SQL (JdbcTemplate)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=9;"
+          edge="1" source="repo_appt" target="db_h2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a21" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="repo_slot" target="db_h2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a22" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;"
+          edge="1" source="repo_user" target="db_h2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

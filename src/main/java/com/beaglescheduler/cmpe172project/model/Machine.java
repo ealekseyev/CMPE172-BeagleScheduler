@@ -6,6 +6,7 @@ public class Machine {
     private String serialNumber;
     private int yearBuilt;
     private String conditionNotes;
+    private String modelName;
 
     public long getMachineId() { return machineId; }
     public void setMachineId(long machineId) { this.machineId = machineId; }
@@ -21,4 +22,7 @@ public class Machine {
 
     public String getConditionNotes() { return conditionNotes; }
     public void setConditionNotes(String conditionNotes) { this.conditionNotes = conditionNotes; }
+
+    public String getModelName() { return modelName; }
+    public void setModelName(String modelName) { this.modelName = modelName; }
 }

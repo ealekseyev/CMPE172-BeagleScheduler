@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Appointments — BeagleScheduler</title>
+  <title>My Appointments — BeagleScheduler</title>
   <link rel="stylesheet" th:href="@{/css/beagle.css}">
 </head>
 <body>
@@ -12,19 +12,19 @@
   <a class="bs-nav-brand" href="/">BeagleScheduler</a>
   <div class="bs-nav-links">
     <a class="bs-nav-link" href="/slots">Available Slots</a>
-    <a class="bs-nav-link active" href="/appointments">Appointments</a>
-    <a class="bs-nav-link" href="/my-appointments">My Appointments</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+    <a class="bs-nav-link active" href="/my-appointments">My Appointments</a>
   </div>
 </nav>
 
 <div class="page-wide">
-  <h2 class="section-heading">All appointments</h2>
-  <p class="section-sub">Every confirmed booking, sorted by most recently created.</p>
+  <h2 class="section-heading">My appointments</h2>
+  <p class="section-sub">Your booking history.</p>
 
   <div th:if="${#lists.isEmpty(appointments)}" class="empty-state">
     <h3>No appointments yet</h3>
-    <p>Once someone books a rental, it will appear here.</p>
-    <a class="btn-accent" href="/slots">Book the first one →</a>
+    <p>Once you book a rental, it will appear here.</p>
+    <a class="btn-accent" href="/slots">Browse available slots →</a>
   </div>
 
   <div th:unless="${#lists.isEmpty(appointments)}" class="table-wrap">
@@ -75,6 +75,6 @@
   </div>
 </div>
 
-<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project &mdash; M3</footer>
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
 </body>
 </html>

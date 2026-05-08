@@ -13,7 +13,9 @@
   <div class="bs-nav-links">
     <a class="bs-nav-link" href="/slots">Slots</a>
     <a class="bs-nav-link" href="/appointments">Appointments</a>
+    <a class="bs-nav-link" href="/my-appointments">My Appointments</a>
     <a class="bs-nav-link active" href="/admin/dashboard">Admin</a>
+    <a class="bs-nav-link" href="/admin/slots">Manage Slots</a>
     <form th:action="@{/logout}" method="post" style="display:inline;margin:0;">
       <button type="submit" class="bs-nav-link" style="background:none;border:none;cursor:pointer;">Sign out</button>
     </form>
@@ -122,6 +124,7 @@
   <div class="action-row">
     <a class="btn-outline" href="/slots">View Slots</a>
     <a class="btn-dark" href="/appointments">All Appointments</a>
+    <a class="btn-dark" href="/admin/slots">Manage Slots</a>
   </div>
 </div>
 

@@ -126,4 +126,8 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsForTechnician(long techId) {
         return apptRepo.findByAssignedTechnician(techId);
     }
+
+    public List<Appointment> getAppointmentsForCustomer(long customerId) {
+        return apptRepo.findByCustomer(customerId);
+    }
 }

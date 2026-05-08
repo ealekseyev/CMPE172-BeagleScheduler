@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Slots — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+    <a class="bs-nav-link" href="/my-appointments">My Appointments</a>
+    <a class="bs-nav-link" href="/admin/dashboard">Admin</a>
+    <a class="bs-nav-link active" href="/admin/slots">Manage Slots</a>
+    <form th:action="@{/logout}" method="post" style="display:inline;margin:0;">
+      <button type="submit" class="bs-nav-link" style="background:none;border:none;cursor:pointer;">Sign out</button>
+    </form>
+  </div>
+</nav>
+
+<div class="page-wide">
+  <h2 class="section-heading">Manage Slots</h2>
+  <p class="section-sub">View all availability slots and add or remove them.</p>
+
+  <!-- All Slots Table -->
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">All Slots</h3>
+
+  <div th:if="${#lists.isEmpty(allSlots)}" class="empty-state">
+    <h3>No slots found</h3>
+    <p>Use the form below to add the first slot.</p>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(allSlots)}" class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>Slot ID</th>
+          <th>Machine</th>
+          <th>Model</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="slot : ${allSlots}">
+          <td th:text="${slot.slotId}"></td>
+          <td><span class="slot-machine" th:text="${slot.serialNumber}"></span></td>
+          <td><span class="slot-model" th:text="${slot.modelName}"></span></td>
+          <td th:text="${slot.startDate}"></td>
+          <td th:text="${slot.endDate}"></td>
+          <td>
+            <span th:if="${slot.available}" class="tag tag-green">Available</span>
+            <span th:unless="${slot.available}" class="tag tag-gray">Booked</span>
+          </td>
+          <td>
+            <form th:if="${slot.available}"
+                  th:action="@{/admin/slots/{id}/delete(id=${slot.slotId})}"
+                  method="post" style="display:inline;">
+              <button type="submit" class="btn-outline"
+                      style="font-size:0.75rem;padding:5px 12px;"
+                      onclick="return confirm('Delete this slot?');">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add New Slot Form -->
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:3rem;">Add New Slot</h3>
+
+  <form th:action="@{/admin/slots/add}" method="post" style="display:flex;flex-direction:column;gap:1rem;max-width:480px;">
+    <div>
+      <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.25rem;">Machine</label>
+      <select name="machineId" required style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem;">
+        <option value="" disabled selected>Select a machine…</option>
+        <option th:each="machine : ${machines}"
+                th:value="${machine.machineId}"
+                th:text="${machine.serialNumber + ' — ' + machine.modelName}"></option>
+      </select>
+    </div>
+    <div>
+      <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.25rem;">Start Date</label>
+      <input type="date" name="startDate" required
+             style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem;">
+    </div>
+    <div>
+      <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.25rem;">End Date</label>
+      <input type="date" name="endDate" required
+             style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem;">
+    </div>
+    <div>
+      <button type="submit" class="btn-dark">Add Slot</button>
+    </div>
+  </form>
+
+  <div class="action-row" style="margin-top:2.5rem;">
+    <a class="btn-outline" href="/admin/dashboard">Back to Dashboard</a>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
+</body>
+</html>

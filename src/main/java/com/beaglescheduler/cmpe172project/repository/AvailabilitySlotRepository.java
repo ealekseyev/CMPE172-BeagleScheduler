@@ -1,12 +1,14 @@
 package com.beaglescheduler.cmpe172project.repository;
 
 import com.beaglescheduler.cmpe172project.model.AvailabilitySlot;
+import com.beaglescheduler.cmpe172project.model.Machine;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +67,60 @@ public class AvailabilitySlotRepository {
         return jdbc.update(
             "UPDATE availability_slots SET is_available = FALSE WHERE slot_id = ? AND is_available = TRUE",
             slotId
+        );
+    }
+
+    /** All slots (available and booked) for admin view. */
+    public List<AvailabilitySlot> findAll() {
+        return jdbc.query(
+            "SELECT s.slot_id, s.machine_id, s.start_date, s.end_date, " +
+            "       s.is_available, m.serial_number, svc.model_name, svc.daily_rate " +
+            "FROM availability_slots s " +
+            "JOIN machines m ON s.machine_id = m.machine_id " +
+            "JOIN services svc ON m.service_id = svc.service_id " +
+            "ORDER BY s.start_date, m.serial_number",
+            ROW_MAPPER
+        );
+    }
+
+    private static final RowMapper<Machine> MACHINE_ROW_MAPPER = new RowMapper<>() {
+        @Override
+        public Machine mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Machine m = new Machine();
+            m.setMachineId(rs.getLong("machine_id"));
+            m.setServiceId(rs.getLong("service_id"));
+            m.setSerialNumber(rs.getString("serial_number"));
+            m.setYearBuilt(rs.getInt("year_built"));
+            m.setConditionNotes(rs.getString("condition_notes"));
+            m.setModelName(rs.getString("model_name"));
+            return m;
+        }
+    };
+
+    /** All machines with their model name for admin slot form dropdown. */
+    public List<Machine> findAllMachines() {
+        return jdbc.query(
+            "SELECT m.machine_id, m.service_id, m.serial_number, m.year_built, m.condition_notes, svc.model_name " +
+            "FROM machines m JOIN services svc ON m.service_id = svc.service_id " +
+            "ORDER BY svc.model_name, m.serial_number",
+            MACHINE_ROW_MAPPER
+        );
+    }
+
+    /** Inserts a new availability slot. */
+    public void createSlot(long machineId, LocalDate startDate, LocalDate endDate) {
+        jdbc.update(
+            "INSERT INTO availability_slots (machine_id, start_date, end_date, is_available) VALUES (?, ?, ?, TRUE)",
+            machineId, startDate, endDate
+        );
+    }
+
+    /** Deletes a slot only if no appointment references it. */
+    public void deleteSlot(long slotId) {
+        jdbc.update(
+            "DELETE FROM availability_slots WHERE slot_id = ? AND NOT EXISTS " +
+            "(SELECT 1 FROM appointments WHERE slot_id = ?)",
+            slotId, slotId
         );
     }
 }
