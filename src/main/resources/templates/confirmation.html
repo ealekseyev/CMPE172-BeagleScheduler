@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booking Confirmed — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+  </div>
+</nav>
+
+<div class="page" style="max-width:600px">
+
+  <div th:if="${appointment}">
+    <h2 class="section-heading">Booking confirmed</h2>
+    <p class="section-sub">Your reservation has been saved. See you on the field.</p>
+
+    <div class="detail-box">
+      <div class="detail-box-header">Appointment details</div>
+      <dl class="detail-grid">
+        <dt>Confirmation #</dt>
+        <dd th:text="${appointment.appointmentId}"></dd>
+        <dt>Customer</dt>
+        <dd th:text="${appointment.customerName}"></dd>
+        <dt>Email</dt>
+        <dd th:text="${appointment.customerEmail}"></dd>
+        <dt>Machine</dt>
+        <dd th:text="${appointment.serialNumber}"></dd>
+        <dt>Model</dt>
+        <dd th:text="${appointment.modelName}"></dd>
+        <dt>Start date</dt>
+        <dd th:text="${appointment.startDate}"></dd>
+        <dt>End date</dt>
+        <dd th:text="${appointment.endDate}"></dd>
+        <dt>Duration</dt>
+        <dd th:text="${appointment.durationDays + ' days'}"></dd>
+        <dt>Total cost</dt>
+        <dd><strong th:text="'$' + ${#numbers.formatDecimal(appointment.totalCost, 1, 2)}"></strong></dd>
+        <dt>Status</dt>
+        <dd><span class="tag tag-green" th:text="${appointment.status}"></span></dd>
+        <dt>Notes</dt>
+        <dd th:text="${appointment.customerNotes ?: '—'}"></dd>
+      </dl>
+    </div>
+
+    <div class="action-row">
+      <a class="btn-dark" href="/slots">Book another slot →</a>
+      <a class="btn-outline" href="/appointments">View all appointments</a>
+      <a class="btn-outline" href="/">Home</a>
+    </div>
+  </div>
+
+  <div th:unless="${appointment}" class="bs-alert bs-alert-info">
+    No booking information found. <a href="/slots">Browse available slots</a>.
+  </div>
+
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project &mdash; M3</footer>
+</body>
+</html>

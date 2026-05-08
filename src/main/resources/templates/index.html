@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BeagleScheduler — Agricultural Machinery Rental</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+    <a class="bs-nav-link" href="/admin/dashboard">Admin</a>
+    <a class="bs-nav-link" href="/technician/dashboard">Technician</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <h1>Agricultural Machinery Rental</h1>
+    <p>Reserve tractors and attachments for multi-day rentals. Browse available windows and pick your dates.</p>
+    <div class="hero-actions">
+      <a class="btn-dark" href="/slots">Browse slots</a>
+      <a class="btn-outline" href="/appointments">View bookings</a>
+    </div>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="/slots">
+      <h3>Browse Slots</h3>
+      <p>See all available rental windows across our fleet of tractors and combines.</p>
+    </a>
+    <a class="card" href="/slots">
+      <h3>Book a Machine</h3>
+      <p>Select a rental window, enter your info, and confirm your reservation.</p>
+    </a>
+    <a class="card" href="/appointments">
+      <h3>View Appointments</h3>
+      <p>Review all confirmed bookings — customer, machine, and rental period.</p>
+    </a>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project &mdash; M3</footer>
+</body>
+</html>

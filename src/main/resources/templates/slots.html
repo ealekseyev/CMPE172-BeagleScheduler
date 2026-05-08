@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Available Slots — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link active" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+  </div>
+</nav>
+
+<div class="page-wide">
+  <h2 class="section-heading">Available rental slots</h2>
+  <p class="section-sub">Each slot is a multi-day rental window. Click <strong>Book</strong> to reserve a machine.</p>
+
+  <div th:if="${error}" class="bs-alert bs-alert-danger" th:text="${error}"></div>
+
+  <div th:if="${#lists.isEmpty(slots)}" class="empty-state">
+    <h3>No slots available</h3>
+    <p>Check back later — new windows are added regularly.</p>
+    <a class="btn-outline" href="/">Go home</a>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(slots)}" class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>Machine</th>
+          <th>Model</th>
+          <th>Start date</th>
+          <th>End date</th>
+          <th>Duration</th>
+          <th>Daily rate</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="slot : ${slots}">
+          <td><span class="slot-machine" th:text="${slot.serialNumber}"></span></td>
+          <td><span class="slot-model" th:text="${slot.modelName}"></span></td>
+          <td th:text="${slot.startDate}"></td>
+          <td th:text="${slot.endDate}"></td>
+          <td th:text="${slot.durationDays + ' days'}"></td>
+          <td th:text="'$' + ${#numbers.formatDecimal(slot.dailyRate, 1, 2)} + '/day'"></td>
+          <td><strong th:text="'$' + ${#numbers.formatDecimal(slot.totalCost, 1, 2)}"></strong></td>
+          <td>
+            <a th:href="@{/book(slotId=${slot.slotId})}" class="btn-accent">Book →</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project &mdash; M3</footer>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+    <a class="bs-nav-link active" href="/admin/dashboard">Admin</a>
+    <form th:action="@{/logout}" method="post" style="display:inline;margin:0;">
+      <button type="submit" class="bs-nav-link" style="background:none;border:none;cursor:pointer;">Sign out</button>
+    </form>
+  </div>
+</nav>
+
+<div class="page-wide">
+  <h2 class="section-heading">Admin Dashboard</h2>
+  <p class="section-sub">Manage all appointments and view registered users.</p>
+
+  <!-- Appointments Section -->
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:2rem;">All Appointments</h3>
+
+  <div th:if="${#lists.isEmpty(appointments)}" class="empty-state">
+    <h3>No appointments yet</h3>
+    <p>Bookings will appear here once customers start reserving slots.</p>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(appointments)}" class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Machine</th>
+          <th>Model</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Total</th>
+          <th>Technician</th>
+          <th>Ready</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="appt : ${appointments}">
+          <td th:text="${appt.appointmentId}"></td>
+          <td>
+            <span class="slot-machine" th:text="${appt.customerName}"></span><br>
+            <span style="font-size:0.8rem;color:var(--text-muted);" th:text="${appt.customerEmail}"></span>
+          </td>
+          <td th:text="${appt.serialNumber}"></td>
+          <td><span class="slot-model" th:text="${appt.modelName}"></span></td>
+          <td th:text="${appt.startDate}"></td>
+          <td th:text="${appt.endDate}"></td>
+          <td><strong th:text="'$' + ${#numbers.formatDecimal(appt.totalCost, 1, 2)}"></strong></td>
+          <td th:text="${appt.assignedTechnicianName != null ? appt.assignedTechnicianName : '—'}"></td>
+          <td>
+            <span th:if="${appt.machineReady}" class="tag tag-green">Ready</span>
+            <span th:unless="${appt.machineReady}" class="tag tag-gray">Pending</span>
+          </td>
+          <td>
+            <span th:if="${appt.status == 'CONFIRMED'}" class="tag tag-green" th:text="${appt.status}"></span>
+            <span th:unless="${appt.status == 'CONFIRMED'}" class="tag tag-gray" th:text="${appt.status}"></span>
+          </td>
+          <td style="white-space:nowrap;">
+            <form th:if="${appt.status != 'CANCELLED'}"
+                  th:action="@{/admin/cancel/{id}(id=${appt.appointmentId})}"
+                  method="post" style="display:inline;">
+              <button type="submit" class="btn-outline"
+                      style="font-size:0.75rem;padding:5px 12px;"
+                      onclick="return confirm('Cancel this appointment?');">Cancel</button>
+            </form>
+            <form th:action="@{/admin/notify/{id}(id=${appt.appointmentId})}"
+                  method="post" style="display:inline;">
+              <button type="submit" class="btn-dark"
+                      style="font-size:0.75rem;padding:5px 12px;">Notify</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Users Section -->
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:3rem;">Registered Users</h3>
+
+  <div class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.userId}"></td>
+          <td><span class="slot-machine" th:text="${user.name}"></span></td>
+          <td th:text="${user.email}"></td>
+          <td th:text="${user.phone != null ? user.phone : '—'}"></td>
+          <td>
+            <span th:if="${user.role == 'ADMIN'}" class="tag tag-orange" th:text="${user.role}"></span>
+            <span th:if="${user.role == 'TECHNICIAN'}" class="tag tag-green" th:text="${user.role}"></span>
+            <span th:if="${user.role == 'CUSTOMER'}" class="tag tag-gray" th:text="${user.role}"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="action-row">
+    <a class="btn-outline" href="/slots">View Slots</a>
+    <a class="btn-dark" href="/appointments">All Appointments</a>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
+</body>
+</html>

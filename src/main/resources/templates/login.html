@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div style="max-width:420px;margin:3rem auto;">
+    <h2 class="section-heading">Sign in</h2>
+    <p class="section-sub">Use your BeagleScheduler account credentials.</p>
+
+    <div th:if="${param.error}" class="bs-alert bs-alert-danger">
+      Invalid email or password.
+    </div>
+    <div th:if="${param.denied}" class="bs-alert bs-alert-danger">
+      Access denied — you don't have permission for that page. Please sign in with the correct account.
+    </div>
+    <div th:if="${param.logout}" class="bs-alert bs-alert-info">
+      You have been signed out.
+    </div>
+
+    <div class="detail-box" style="margin-top:1.5rem;">
+      <form th:action="@{/login}" method="post" style="padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <label class="bs-label">Email <span>*</span></label>
+          <input class="bs-input" type="text" name="username" placeholder="you@example.com" required autofocus/>
+        </div>
+        <div>
+          <label class="bs-label">Password <span>*</span></label>
+          <input class="bs-input" type="password" name="password" placeholder="••••••••" required/>
+        </div>
+        <button type="submit" class="btn-dark" style="align-self:flex-start;">Sign in →</button>
+      </form>
+    </div>
+
+    <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--text-muted);">
+      <a href="/" style="color:var(--text-muted);">← Back to home</a>
+    </p>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
+</body>
+</html>

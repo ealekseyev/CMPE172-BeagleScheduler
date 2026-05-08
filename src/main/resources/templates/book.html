@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Slot — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/appointments">Appointments</a>
+  </div>
+</nav>
+
+<div class="page" style="max-width:600px">
+  <h2 class="section-heading">Book a slot</h2>
+  <p class="section-sub">Review the rental window below and enter your contact details.</p>
+
+  <div class="detail-box">
+    <div class="detail-box-header">Rental window</div>
+    <dl class="detail-grid">
+      <dt>Machine</dt>
+      <dd th:text="${slot.serialNumber}"></dd>
+      <dt>Model</dt>
+      <dd th:text="${slot.modelName}"></dd>
+      <dt>Start date</dt>
+      <dd th:text="${slot.startDate}"></dd>
+      <dt>End date</dt>
+      <dd th:text="${slot.endDate}"></dd>
+      <dt>Duration</dt>
+      <dd th:text="${slot.durationDays + ' days'}"></dd>
+      <dt>Daily rate</dt>
+      <dd th:text="'$' + ${#numbers.formatDecimal(slot.dailyRate, 1, 2)} + '/day'"></dd>
+      <dt>Total cost</dt>
+      <dd><strong th:text="'$' + ${#numbers.formatDecimal(slot.totalCost, 1, 2)}"></strong></dd>
+    </dl>
+  </div>
+
+  <form method="post" th:action="@{/book}">
+    <input type="hidden" name="slotId" th:value="${slot.slotId}">
+
+    <div class="bs-form-group">
+      <label class="bs-label" for="customerName">Full name <span>*</span></label>
+      <input class="bs-input" type="text" id="customerName" name="customerName" required placeholder="Jane Farmer">
+    </div>
+
+    <div class="bs-form-group">
+      <label class="bs-label" for="email">Email address <span>*</span></label>
+      <input class="bs-input" type="email" id="email" name="email" required placeholder="jane@farm.example.com">
+    </div>
+
+    <div class="bs-form-group">
+      <label class="bs-label" for="customerNotes">Notes <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+      <textarea class="bs-textarea" id="customerNotes" name="customerNotes" placeholder="Any special requirements or notes for the rental…"></textarea>
+    </div>
+
+    <div class="action-row" style="margin-top:0">
+      <button type="submit" class="btn-dark">Confirm booking →</button>
+      <a class="btn-outline" href="/slots">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project &mdash; M3</footer>
+</body>
+</html>

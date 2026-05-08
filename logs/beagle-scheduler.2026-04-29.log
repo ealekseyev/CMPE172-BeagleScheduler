@@ -1,0 +1,22 @@
+2026-04-29 20:09:11.101 INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-29 20:09:11.181 INFO  c.b.c.Cmpe172ProjectApplication - Starting Cmpe172ProjectApplication using Java 21.0.9 with PID 10804 (C:\Users\giant\Documents\school\CMPE172Project\build\classes\java\main started by giant in C:\Users\giant\Documents\school\CMPE172Project)
+2026-04-29 20:09:11.183 INFO  c.b.c.Cmpe172ProjectApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-29 20:09:12.996 INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-29 20:09:13.012 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-29 20:09:13.012 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-29 20:09:13.012 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-29 20:09:13.129 INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1882 ms
+2026-04-29 20:09:13.333 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-29 20:09:13.621 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2026-04-29 20:09:13.625 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-29 20:09:15.174 INFO  o.s.b.w.a.WelcomePageHandlerMapping - Adding welcome page template: index
+2026-04-29 20:09:15.629 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-29 20:09:15.671 INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-29 20:09:15.681 INFO  c.b.c.Cmpe172ProjectApplication - Started Cmpe172ProjectApplication in 5.412 seconds (process running for 5.994)
+2026-04-29 20:09:54.869 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-29 20:09:54.870 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-29 20:09:54.874 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-04-29 20:10:00.169 INFO  c.b.c.c.AppointmentController - GET /slots — returned 8 available slots
+2026-04-29 20:10:05.380 INFO  c.b.c.c.AppointmentController - Booking form served for slotId=3
+2026-04-29 20:37:02.818 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m48s678ms606µs300ns).
+2026-04-29 22:58:58.029 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h53m54s699ms447µs300ns).
