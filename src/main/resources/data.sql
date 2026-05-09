@@ -24,7 +24,7 @@ INSERT INTO availability_slots (machine_id, start_date, end_date, is_available) 
 
 -- Seed users: admin, technicians, customer
 INSERT INTO users (name, email, phone, role, password) VALUES
-    ('Admin User',   'admin@beagle.com',      '555-0001', 'ADMIN',      '{noop}admin'),
-    ('Tech One',     'tech1@beagle.com',       '555-0002', 'TECHNICIAN', '{noop}tech1'),
-    ('Tech Two',     'tech2@beagle.com',       '555-0003', 'TECHNICIAN', '{noop}tech2'),
-    ('Alice Farmer', 'alice@farm.example.com', '555-0100', 'CUSTOMER',   null);
+    ('Admin User',   'admin@beagle.com',      '555-0001', 'ADMIN',      '{bcrypt}$2a$10$08YT1HT/WitZGfAPP5ZVYOjHopwrUZYz5xh9rrzPMalI00FGK/gpm'),
+    ('Tech One',     'tech1@beagle.com',       '555-0002', 'TECHNICIAN', '{bcrypt}$2a$10$WqxL8BavicM5QZxTTSDpnOPkYOCKVXpNhTyH/ifKPOuhY/ysV0oSe'),
+    ('Tech Two',     'tech2@beagle.com',       '555-0003', 'TECHNICIAN', '{bcrypt}$2a$10$5CnFWHRVF7x9dz5s./.fse6HBCX318rfr/B1tqZNstWt1jkb18MUW'),
+    ('Alice Farmer', 'alice@farm.example.com', '555-0100', 'CUSTOMER',   '{noop}customer123');

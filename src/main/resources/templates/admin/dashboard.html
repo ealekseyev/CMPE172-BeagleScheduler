@@ -12,8 +12,8 @@
   <a class="bs-nav-brand" href="/">BeagleScheduler</a>
   <div class="bs-nav-links">
     <a class="bs-nav-link" href="/slots">Slots</a>
-    <a class="bs-nav-link" href="/appointments">Appointments</a>
-    <a class="bs-nav-link" href="/my-appointments">My Appointments</a>
+    <a class="bs-nav-link" href="/my-appointments">Appointments</a>
+    <a class="bs-nav-link" href="/my-notifications">My Notifications</a>
     <a class="bs-nav-link active" href="/admin/dashboard">Admin</a>
     <a class="bs-nav-link" href="/admin/slots">Manage Slots</a>
     <form th:action="@{/logout}" method="post" style="display:inline;margin:0;">
@@ -123,8 +123,48 @@
 
   <div class="action-row">
     <a class="btn-outline" href="/slots">View Slots</a>
-    <a class="btn-dark" href="/appointments">All Appointments</a>
+    <a class="btn-dark" href="/my-appointments">All Appointments</a>
     <a class="btn-dark" href="/admin/slots">Manage Slots</a>
+  </div>
+
+  <!-- Notifications Section -->
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;margin-top:3rem;">Notification Outbox</h3>
+  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">
+    All notification records. Pending entries are dispatched automatically every 10 seconds.
+  </p>
+
+  <div th:if="${#lists.isEmpty(notifications)}" class="empty-state">
+    <h3>No notifications yet</h3>
+    <p>Notifications are written here on every booking, cancellation, or machine-ready event.</p>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(notifications)}" class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Appt</th>
+          <th>Type</th>
+          <th>Channel</th>
+          <th>Status</th>
+          <th>Sent at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="n : ${notifications}">
+          <td th:text="${n.notificationId}"></td>
+          <td th:text="${n.appointmentId}"></td>
+          <td><span class="slot-model" th:text="${n.notificationType}"></span></td>
+          <td th:text="${n.channel}"></td>
+          <td>
+            <span th:if="${n.deliveryStatus == 'sent'}"   class="tag tag-green"  th:text="${n.deliveryStatus}"></span>
+            <span th:if="${n.deliveryStatus == 'pending'}" class="tag tag-gray"   th:text="${n.deliveryStatus}"></span>
+            <span th:if="${n.deliveryStatus == 'failed'}"  class="tag tag-orange" th:text="${n.deliveryStatus}"></span>
+          </td>
+          <td th:text="${n.sentAt != null ? n.sentAt : '—'}"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 

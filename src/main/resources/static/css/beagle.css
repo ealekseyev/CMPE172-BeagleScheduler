@@ -132,7 +132,7 @@ body {
 }
 
 .page-wide {
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 3rem 2rem 5rem;
 }
@@ -225,7 +225,7 @@ body {
 .table-wrap {
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 /* ── Tags / badges ── */

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Appointments — BeagleScheduler</title>
+  <title>My Appointments - BeagleScheduler</title>
   <link rel="stylesheet" th:href="@{/css/beagle.css}">
 </head>
 <body>
@@ -12,19 +12,22 @@
   <a class="bs-nav-brand" href="/">BeagleScheduler</a>
   <div class="bs-nav-links">
     <a class="bs-nav-link" href="/slots">Available Slots</a>
-    <a class="bs-nav-link" href="/appointments">Appointments</a>
-    <a class="bs-nav-link active" href="/my-appointments">My Appointments</a>
+    <a class="bs-nav-link active" href="/my-appointments">Appointments</a>
+    <a class="bs-nav-link" href="/my-notifications">My Notifications</a>
   </div>
 </nav>
 
 <div class="page-wide">
-  <h2 class="section-heading">My appointments</h2>
-  <p class="section-sub">Your booking history.</p>
+  <h2 class="section-heading" th:text="${isAdmin} ? 'All appointments' : 'My appointments'"></h2>
+  <p class="section-sub" th:text="${isAdmin} ? 'Every booking in the system.' : 'Your booking history.'"></p>
+
+  <div th:if="${success}" class="bs-alert bs-alert-success" th:text="${success}"></div>
+  <div th:if="${error}" class="bs-alert bs-alert-danger" th:text="${error}"></div>
 
   <div th:if="${#lists.isEmpty(appointments)}" class="empty-state">
     <h3>No appointments yet</h3>
     <p>Once you book a rental, it will appear here.</p>
-    <a class="btn-accent" href="/slots">Browse available slots →</a>
+    <a class="btn-accent" href="/slots">Browse available slots &rarr;</a>
   </div>
 
   <div th:unless="${#lists.isEmpty(appointments)}" class="table-wrap">
@@ -43,6 +46,7 @@
           <th>Status</th>
           <th>Technician</th>
           <th>Machine Ready</th>
+          <th th:unless="${isAdmin}">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -60,10 +64,22 @@
             <span th:if="${appt.status == 'CONFIRMED'}" class="tag tag-green" th:text="${appt.status}"></span>
             <span th:unless="${appt.status == 'CONFIRMED'}" class="tag tag-gray" th:text="${appt.status}"></span>
           </td>
-          <td th:text="${appt.assignedTechnicianName != null ? appt.assignedTechnicianName : '—'}"></td>
+          <td th:text="${appt.assignedTechnicianName != null ? appt.assignedTechnicianName : '-'}"></td>
           <td>
             <span th:if="${appt.machineReady}" class="tag tag-green">Ready</span>
             <span th:unless="${appt.machineReady}" class="tag tag-gray">Pending</span>
+          </td>
+          <td th:unless="${isAdmin}">
+            <span th:if="${appt.status == 'CONFIRMED'}">
+              <form th:action="@{/my-appointments/cancel/{id}(id=${appt.appointmentId})}"
+                    method="post" style="display:inline">
+                <button type="submit" class="btn-outline"
+                        th:onclick="|return confirm('Cancel appointment #${appt.appointmentId}?')|">Cancel</button>
+              </form>
+              <a th:href="@{/my-appointments/reschedule/{id}(id=${appt.appointmentId})}"
+                 class="btn-accent" style="margin-left:4px">Reschedule</a>
+            </span>
+            <span th:unless="${appt.status == 'CONFIRMED'}">-</span>
           </td>
         </tr>
       </tbody>
@@ -71,7 +87,7 @@
   </div>
 
   <div class="action-row">
-    <a class="btn-dark" href="/slots">Book another slot →</a>
+    <a class="btn-dark" href="/slots">Book another slot &rarr;</a>
   </div>
 </div>
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reschedule Appointment — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link active" href="/my-appointments">Appointments</a>
+    <a class="bs-nav-link" href="/my-notifications">My Notifications</a>
+  </div>
+</nav>
+
+<div class="page-wide">
+  <h2 class="section-heading">Reschedule appointment</h2>
+  <p class="section-sub">Select a new slot below. Your current booking will be cancelled and a new one created.</p>
+
+  <div th:if="${error}" class="bs-alert bs-alert-danger" th:text="${error}"></div>
+
+  <div class="detail-box" style="max-width:600px;margin-bottom:1.5rem">
+    <div class="detail-box-header">Current appointment #<span th:text="${appointment.appointmentId}"></span></div>
+    <dl class="detail-grid">
+      <dt>Machine</dt>
+      <dd th:text="${appointment.serialNumber}"></dd>
+      <dt>Model</dt>
+      <dd th:text="${appointment.modelName}"></dd>
+      <dt>Start date</dt>
+      <dd th:text="${appointment.startDate}"></dd>
+      <dt>End date</dt>
+      <dd th:text="${appointment.endDate}"></dd>
+      <dt>Duration</dt>
+      <dd th:text="${appointment.durationDays + ' days'}"></dd>
+      <dt>Total cost</dt>
+      <dd><strong th:text="'$' + ${#numbers.formatDecimal(appointment.totalCost, 1, 2)}"></strong></dd>
+    </dl>
+  </div>
+
+  <div th:if="${#lists.isEmpty(slots)}" class="empty-state">
+    <h3>No slots available</h3>
+    <p>There are no available slots to reschedule to. Check back later.</p>
+    <a class="btn-outline" href="/my-appointments">Back to My Appointments</a>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(slots)}">
+    <form th:action="@{/my-appointments/reschedule/{id}(id=${appointment.appointmentId})}" method="post">
+      <div class="table-wrap">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Machine</th>
+              <th>Model</th>
+              <th>Start date</th>
+              <th>End date</th>
+              <th>Duration</th>
+              <th>Daily rate</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="slot : ${slots}">
+              <td>
+                <input type="radio" name="newSlotId" th:value="${slot.slotId}"
+                       onchange="document.getElementById('submitBtn').disabled=false">
+              </td>
+              <td><span class="slot-machine" th:text="${slot.serialNumber}"></span></td>
+              <td><span class="slot-model" th:text="${slot.modelName}"></span></td>
+              <td th:text="${slot.startDate}"></td>
+              <td th:text="${slot.endDate}"></td>
+              <td th:text="${slot.durationDays + ' days'}"></td>
+              <td th:text="'$' + ${#numbers.formatDecimal(slot.dailyRate, 1, 2)} + '/day'"></td>
+              <td><strong th:text="'$' + ${#numbers.formatDecimal(slot.totalCost, 1, 2)}"></strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="action-row">
+        <button type="submit" id="submitBtn" class="btn-dark" disabled>Confirm reschedule →</button>
+        <a class="btn-outline" href="/my-appointments">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
+</body>
+</html>

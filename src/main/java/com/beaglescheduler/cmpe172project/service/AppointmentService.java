@@ -23,15 +23,18 @@ public class AppointmentService {
     private final AppUserRepository userRepo;
     private final AppointmentRepository apptRepo;
     private final BookingMetricsService metricsService;
+    private final NotificationService notificationService;
 
     public AppointmentService(AvailabilitySlotRepository slotRepo,
                               AppUserRepository userRepo,
                               AppointmentRepository apptRepo,
-                              BookingMetricsService metricsService) {
+                              BookingMetricsService metricsService,
+                              NotificationService notificationService) {
         this.slotRepo = slotRepo;
         this.userRepo = userRepo;
         this.apptRepo = apptRepo;
         this.metricsService = metricsService;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -93,6 +96,15 @@ public class AppointmentService {
                 result.getDurationDays(), String.format("%.2f", result.getTotalCost()),
                 result.getAssignedTechnicianName());
 
+            // 7. Queue notifications inside the transaction (outbox pattern)
+            String payload = buildPayload(result);
+            notificationService.queue(result.getAppointmentId(), result.getCustomerId(),
+                "email", "booking_confirmed", payload);
+            if (result.getAssignedTechnicianId() != 0) {
+                notificationService.queue(result.getAppointmentId(), result.getAssignedTechnicianId(),
+                    "email", "technician_assignment", payload);
+            }
+
             return result;
 
         } catch (DataAccessException e) {
@@ -107,12 +119,58 @@ public class AppointmentService {
         Appointment appt = apptRepo.findById(id);
         apptRepo.cancelAppointment(id);
         apptRepo.reopenSlot(appt.getSlotId());
+        notificationService.queue(id, appt.getCustomerId(), "email", "booking_cancelled",
+            buildPayload(appt));
         log.info("Appointment cancelled and slot reopened: appointmentId={}, slotId={}", id, appt.getSlotId());
     }
 
     public void markMachineReady(long id) {
+        Appointment appt = apptRepo.findById(id);
         apptRepo.markMachineReady(id);
+        notificationService.queue(id, appt.getCustomerId(), "email", "readiness_alert",
+            buildPayload(appt));
         log.info("Machine marked ready for appointmentId={}", id);
+    }
+
+    @Transactional
+    public Appointment rescheduleAppointment(long oldApptId, long newSlotId) {
+        Appointment oldAppt = apptRepo.findById(oldApptId);
+        if (!"CONFIRMED".equals(oldAppt.getStatus())) {
+            throw new IllegalStateException("Only CONFIRMED appointments can be rescheduled.");
+        }
+        // Cancel old + reopen its slot (no cancel notification)
+        apptRepo.cancelAppointment(oldApptId);
+        apptRepo.reopenSlot(oldAppt.getSlotId());
+
+        // Claim new slot atomically
+        int rows = slotRepo.markUnavailable(newSlotId);
+        if (rows == 0) throw new SlotUnavailableException(newSlotId);
+
+        AvailabilitySlot newSlot = slotRepo.findById(newSlotId)
+            .orElseThrow(() -> new IllegalArgumentException("Slot not found: " + newSlotId));
+
+        // New appointment — same customer + notes
+        Appointment newAppt = new Appointment();
+        newAppt.setSlotId(newSlotId);
+        newAppt.setCustomerId(oldAppt.getCustomerId());
+        newAppt.setMachineId(newSlot.getMachineId());
+        newAppt.setStatus("CONFIRMED");
+        newAppt.setCustomerNotes(oldAppt.getCustomerNotes());
+        newAppt = apptRepo.save(newAppt);
+
+        // Round-robin technician
+        List<AppUser> techs = userRepo.findByRole("TECHNICIAN");
+        if (!techs.isEmpty()) {
+            AppUser tech = techs.get((int)(newAppt.getAppointmentId() % techs.size()));
+            apptRepo.assignTechnician(newAppt.getAppointmentId(), tech.getUserId());
+        }
+
+        Appointment result = apptRepo.findById(newAppt.getAppointmentId());
+        notificationService.queue(result.getAppointmentId(), result.getCustomerId(),
+            "email", "booking_rescheduled", buildPayload(result));
+        log.info("Appointment rescheduled: old={}, new={}, newSlot={}",
+            oldApptId, result.getAppointmentId(), newSlotId);
+        return result;
     }
 
     public Appointment getAppointmentById(long id) {
@@ -129,5 +187,16 @@ public class AppointmentService {
 
     public List<Appointment> getAppointmentsForCustomer(long customerId) {
         return apptRepo.findByCustomer(customerId);
+    }
+
+    private String buildPayload(Appointment appt) {
+        return String.format(
+            "{\"appointmentId\":%d,\"customerEmail\":\"%s\",\"machine\":\"%s\",\"model\":\"%s\",\"start\":\"%s\",\"end\":\"%s\"}",
+            appt.getAppointmentId(),
+            appt.getCustomerEmail() != null ? appt.getCustomerEmail() : "",
+            appt.getSerialNumber()  != null ? appt.getSerialNumber()  : "",
+            appt.getModelName()     != null ? appt.getModelName()     : "",
+            appt.getStartDate(), appt.getEndDate()
+        );
     }
 }

@@ -12,6 +12,8 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
@@ -83,7 +85,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(a -> a
                 .requestMatchers("/", "/slots", "/book", "/confirmation", "/health",
                                  "/css/**", "/h2-console/**", "/mock/notify",
-                                 "/appointments/*/notify", "/appointments").permitAll()
+                                 "/appointments/*/notify").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/technician/**").hasRole("TECHNICIAN")
                 .anyRequest().authenticated()
@@ -132,6 +134,14 @@ public class SecurityConfig {
                 .roles(role)
                 .build();
         };
+    }
+
+    // -------------------------------------------------------------------------
+    // Password Encoder
+    // -------------------------------------------------------------------------
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     // -------------------------------------------------------------------------
