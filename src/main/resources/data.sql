@@ -13,14 +13,14 @@ INSERT INTO machines (service_id, serial_number, year_built, condition_notes) VA
 
 -- Availability slots: multi-day date ranges for each machine
 INSERT INTO availability_slots (machine_id, start_date, end_date, is_available) VALUES
-    (1, '2026-03-16', '2026-03-20', TRUE),
-    (1, '2026-03-23', '2026-03-27', TRUE),
-    (2, '2026-03-16', '2026-03-19', TRUE),
-    (2, '2026-03-24', '2026-03-28', TRUE),
-    (3, '2026-03-17', '2026-03-21', TRUE),
-    (3, '2026-03-25', '2026-03-30', TRUE),
-    (1, '2026-04-01', '2026-04-05', TRUE),
-    (2, '2026-04-07', '2026-04-11', TRUE);
+    (1, '2026-06-02', '2026-06-06', TRUE),
+    (1, '2026-06-09', '2026-06-13', TRUE),
+    (2, '2026-06-02', '2026-06-05', TRUE),
+    (2, '2026-06-16', '2026-06-20', TRUE),
+    (3, '2026-06-08', '2026-06-12', TRUE),
+    (3, '2026-06-22', '2026-06-26', TRUE),
+    (1, '2026-07-07', '2026-07-11', TRUE),
+    (2, '2026-07-14', '2026-07-18', TRUE);
 
 -- Seed users: admin, technicians, customer
 INSERT INTO users (name, email, phone, role, password) VALUES

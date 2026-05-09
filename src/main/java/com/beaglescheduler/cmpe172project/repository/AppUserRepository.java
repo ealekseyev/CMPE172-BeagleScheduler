@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -17,9 +18,11 @@ import java.util.Optional;
 public class AppUserRepository {
 
     private final JdbcTemplate jdbc;
+    private final PasswordEncoder passwordEncoder;
 
-    public AppUserRepository(JdbcTemplate jdbc) {
+    public AppUserRepository(JdbcTemplate jdbc, PasswordEncoder passwordEncoder) {
         this.jdbc = jdbc;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static final RowMapper<AppUser> ROW_MAPPER = new RowMapper<>() {
@@ -82,7 +85,15 @@ public class AppUserRepository {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhone());
             ps.setString(4, user.getRole() != null ? user.getRole() : "CUSTOMER");
-            ps.setString(5, user.getPassword());
+            String pwdToStore;
+            if (user.getPassword() == null) {
+                pwdToStore = null;
+            } else if (user.getPassword().startsWith("{")) {
+                pwdToStore = user.getPassword();
+            } else {
+                pwdToStore = passwordEncoder.encode(user.getPassword());
+            }
+            ps.setString(5, pwdToStore);
             return ps;
         }, keyHolder);
         user.setUserId(keyHolder.getKey().longValue());

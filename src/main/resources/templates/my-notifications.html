@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Notifications — BeagleScheduler</title>
+  <link rel="stylesheet" th:href="@{/css/beagle.css}">
+</head>
+<body>
+
+<nav class="bs-nav">
+  <a class="bs-nav-brand" href="/">BeagleScheduler</a>
+  <div class="bs-nav-links">
+    <a class="bs-nav-link" href="/slots">Available Slots</a>
+    <a class="bs-nav-link" href="/my-appointments">My Appointments</a>
+    <a class="bs-nav-link active" href="/my-notifications">My Notifications</a>
+  </div>
+</nav>
+
+<div class="page-wide">
+  <h2 class="section-heading">My notifications</h2>
+  <p class="section-sub">All booking events and alerts sent to your account.</p>
+
+  <div th:if="${#lists.isEmpty(notifications)}" class="empty-state">
+    <h3>No notifications yet</h3>
+    <p>You'll see confirmations, cancellations, and readiness alerts here once you make a booking.</p>
+    <a class="btn-accent" href="/slots">Browse available slots →</a>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(notifications)}" class="table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Appointment</th>
+          <th>Type</th>
+          <th>Channel</th>
+          <th>Status</th>
+          <th>Sent at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="n : ${notifications}">
+          <td th:text="${n.notificationId}"></td>
+          <td th:text="${n.appointmentId}"></td>
+          <td><span class="slot-model" th:text="${n.notificationType}"></span></td>
+          <td th:text="${n.channel}"></td>
+          <td>
+            <span th:if="${n.deliveryStatus == 'sent'}"    class="tag tag-green"  th:text="${n.deliveryStatus}"></span>
+            <span th:if="${n.deliveryStatus == 'pending'}" class="tag tag-gray"   th:text="${n.deliveryStatus}"></span>
+            <span th:if="${n.deliveryStatus == 'failed'}"  class="tag tag-orange" th:text="${n.deliveryStatus}"></span>
+          </td>
+          <td th:text="${n.sentAt != null ? n.sentAt : '—'}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="action-row">
+    <a class="btn-outline" href="/my-appointments">My Appointments</a>
+    <a class="btn-dark" href="/slots">Book a slot →</a>
+  </div>
+</div>
+
+<footer class="bs-footer">BeagleScheduler &mdash; CMPE172 Project</footer>
+</body>
+</html>

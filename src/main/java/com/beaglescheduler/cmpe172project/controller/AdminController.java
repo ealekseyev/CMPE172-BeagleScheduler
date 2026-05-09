@@ -2,6 +2,7 @@ package com.beaglescheduler.cmpe172project.controller;
 
 import com.beaglescheduler.cmpe172project.repository.AppUserRepository;
 import com.beaglescheduler.cmpe172project.service.AppointmentService;
+import com.beaglescheduler.cmpe172project.service.NotificationService;
 import com.beaglescheduler.cmpe172project.service.SlotService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,25 @@ public class AdminController {
     private final AppUserRepository appUserRepository;
     private final RestTemplate restTemplate;
     private final SlotService slotService;
+    private final NotificationService notificationService;
 
     public AdminController(AppointmentService appointmentService,
                            AppUserRepository appUserRepository,
                            RestTemplate restTemplate,
-                           SlotService slotService) {
+                           SlotService slotService,
+                           NotificationService notificationService) {
         this.appointmentService = appointmentService;
         this.appUserRepository = appUserRepository;
         this.restTemplate = restTemplate;
         this.slotService = slotService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("appointments", appointmentService.getAllAppointments());
         model.addAttribute("users", appUserRepository.findAll());
+        model.addAttribute("notifications", notificationService.getAllNotifications());
         return "admin/dashboard";
     }
 

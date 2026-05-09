@@ -52,3 +52,16 @@ CREATE TABLE IF NOT EXISTS appointments (
     CONSTRAINT fk_appt_machine  FOREIGN KEY (machine_id)              REFERENCES machines(machine_id),
     CONSTRAINT fk_appt_tech     FOREIGN KEY (assigned_technician_id)  REFERENCES users(user_id)
 );
+
+CREATE TABLE IF NOT EXISTS notifications (
+    notification_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id    BIGINT        NOT NULL,
+    user_id           BIGINT        NOT NULL,
+    channel           VARCHAR(10)   NOT NULL,
+    notification_type VARCHAR(50)   NOT NULL,
+    delivery_status   VARCHAR(10)   NOT NULL DEFAULT 'pending',
+    sent_at           TIMESTAMP,
+    payload_json      VARCHAR(2000),
+    CONSTRAINT fk_notif_appt FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
+    CONSTRAINT fk_notif_user FOREIGN KEY (user_id)        REFERENCES users(user_id)
+);

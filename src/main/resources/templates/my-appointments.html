@@ -30,11 +30,10 @@
     <a class="btn-accent" href="/slots">Browse available slots &rarr;</a>
   </div>
 
-  <div th:unless="${#lists.isEmpty(appointments)}" class="table-wrap">
-    <table class="bs-table">
+  <div th:unless="${#lists.isEmpty(appointments)}" class="table-wrap appointments-table-wrap">
+    <table class="bs-table appointments-table">
       <thead>
         <tr>
-          <th>#</th>
           <th>Customer</th>
           <th>Email</th>
           <th>Machine</th>
@@ -51,33 +50,32 @@
       </thead>
       <tbody>
         <tr th:each="appt : ${appointments}">
-          <td th:text="${appt.appointmentId}"></td>
-          <td><span class="slot-machine" th:text="${appt.customerName}"></span></td>
-          <td th:text="${appt.customerEmail}"></td>
-          <td th:text="${appt.serialNumber}"></td>
-          <td><span class="slot-model" th:text="${appt.modelName}"></span></td>
-          <td th:text="${appt.startDate}"></td>
-          <td th:text="${appt.endDate}"></td>
-          <td th:text="${appt.durationDays}"></td>
-          <td><strong th:text="'$' + ${#numbers.formatDecimal(appt.totalCost, 1, 2)}"></strong></td>
-          <td>
+          <td data-label="Customer"><span class="slot-machine" th:text="${appt.customerName}"></span></td>
+          <td data-label="Email" th:text="${appt.customerEmail}"></td>
+          <td data-label="Machine" th:text="${appt.serialNumber}"></td>
+          <td data-label="Model"><span class="slot-model" th:text="${appt.modelName}"></span></td>
+          <td data-label="Start date" th:text="${appt.startDate}"></td>
+          <td data-label="End date" th:text="${appt.endDate}"></td>
+          <td data-label="Days" th:text="${appt.durationDays}"></td>
+          <td data-label="Total"><strong th:text="'$' + ${#numbers.formatDecimal(appt.totalCost, 1, 2)}"></strong></td>
+          <td data-label="Status">
             <span th:if="${appt.status == 'CONFIRMED'}" class="tag tag-green" th:text="${appt.status}"></span>
             <span th:unless="${appt.status == 'CONFIRMED'}" class="tag tag-gray" th:text="${appt.status}"></span>
           </td>
-          <td th:text="${appt.assignedTechnicianName != null ? appt.assignedTechnicianName : '-'}"></td>
-          <td>
+          <td data-label="Technician" th:text="${appt.assignedTechnicianName != null ? appt.assignedTechnicianName : '-'}"></td>
+          <td data-label="Machine Ready">
             <span th:if="${appt.machineReady}" class="tag tag-green">Ready</span>
             <span th:unless="${appt.machineReady}" class="tag tag-gray">Pending</span>
           </td>
-          <td th:unless="${isAdmin}">
-            <span th:if="${appt.status == 'CONFIRMED'}">
+          <td data-label="Actions" th:unless="${isAdmin}">
+            <span th:if="${appt.status == 'CONFIRMED'}" class="appointment-actions">
               <form th:action="@{/my-appointments/cancel/{id}(id=${appt.appointmentId})}"
-                    method="post" style="display:inline">
+                    method="post">
                 <button type="submit" class="btn-outline"
                         th:onclick="|return confirm('Cancel appointment #${appt.appointmentId}?')|">Cancel</button>
               </form>
               <a th:href="@{/my-appointments/reschedule/{id}(id=${appt.appointmentId})}"
-                 class="btn-accent" style="margin-left:4px">Reschedule</a>
+                 class="btn-accent">Reschedule</a>
             </span>
             <span th:unless="${appt.status == 'CONFIRMED'}">-</span>
           </td>

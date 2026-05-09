@@ -228,6 +228,104 @@ body {
   overflow-x: auto;
 }
 
+.appointments-table-wrap {
+  overflow-x: visible;
+}
+
+.appointments-table {
+  table-layout: fixed;
+  font-size: 0.78rem;
+}
+
+.appointments-table thead th,
+.appointments-table tbody td {
+  padding-left: 8px;
+  padding-right: 8px;
+  overflow-wrap: anywhere;
+}
+
+.appointments-table thead th {
+  letter-spacing: 0.3px;
+}
+
+.appointments-table .btn-outline,
+.appointments-table .btn-accent {
+  padding: 7px 12px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.appointment-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.appointment-actions form {
+  display: inline-flex;
+}
+
+.appointments-table th:last-child,
+.appointments-table td:last-child {
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .appointments-table-wrap {
+    border: none;
+  }
+
+  .appointments-table,
+  .appointments-table thead,
+  .appointments-table tbody,
+  .appointments-table tr,
+  .appointments-table th,
+  .appointments-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .appointments-table thead {
+    display: none;
+  }
+
+  .appointments-table tbody tr {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .appointments-table tbody td {
+    display: grid;
+    grid-template-columns: minmax(110px, 38%) 1fr;
+    gap: 12px;
+    padding: 10px 12px;
+    text-align: right;
+  }
+
+  .appointments-table tbody td::before {
+    content: attr(data-label);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .appointments-table th:last-child,
+  .appointments-table td:last-child {
+    text-align: right;
+  }
+
+  .appointment-actions {
+    justify-content: flex-end;
+  }
+}
+
 /* ── Tags / badges ── */
 .tag {
   display: inline-block;

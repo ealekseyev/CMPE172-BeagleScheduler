@@ -2,19 +2,17 @@ package com.beaglescheduler.cmpe172project;
 
 import com.beaglescheduler.cmpe172project.model.Appointment;
 import com.beaglescheduler.cmpe172project.repository.AppointmentRepository;
+import com.beaglescheduler.cmpe172project.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
 /**
- * Coarse-grained interface: a single call triggers the full notification.
- * Internally it looks up the appointment and POSTs to the mock notification
- * service over HTTP — the same boundary that would point to an external host
- * (SendGrid, Twilio, etc.) in production.
+ * Coarse-grained trigger endpoint used by the Admin "Notify" button.
+ * Writes a pickup_reminder notification to the outbox; the background
+ * dispatcher (NotificationService) forwards it to /mock/notify and marks it sent.
  */
 @RestController
 public class AppointmentNotificationController {
@@ -22,46 +20,31 @@ public class AppointmentNotificationController {
     private static final Logger log = LoggerFactory.getLogger(AppointmentNotificationController.class);
 
     private final AppointmentRepository appointmentRepository;
-    private final RestTemplate restTemplate;
+    private final NotificationService notificationService;
 
     public AppointmentNotificationController(AppointmentRepository appointmentRepository,
-                                             RestTemplate restTemplate) {
+                                             NotificationService notificationService) {
         this.appointmentRepository = appointmentRepository;
-        this.restTemplate = restTemplate;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/appointments/{id}/notify")
-    public Map<?, ?> notifyAppointment(@PathVariable long id) {
-        log.info("Notification triggered for appointmentId={}", id);
-        try {
-            Appointment appt = appointmentRepository.findById(id);
+    public Map<String, Object> notifyAppointment(@PathVariable long id) {
+        log.info("Manual notification triggered for appointmentId={}", id);
+        Appointment appt = appointmentRepository.findById(id);
 
-            Map<String, Object> payload = Map.of(
-                "appointmentId", appt.getAppointmentId(),
-                "customerEmail", appt.getCustomerEmail() != null ? appt.getCustomerEmail() : "",
-                "message", "Your appointment for " + appt.getModelName()
-                    + " from " + appt.getStartDate() + " to " + appt.getEndDate()
-                    + " is confirmed.",
-                "assignedTechnician", appt.getAssignedTechnicianName() != null
-                    ? appt.getAssignedTechnicianName() : "Unassigned",
-                "machineReady", appt.isMachineReady()
-            );
+        String payload = String.format(
+            "{\"appointmentId\":%d,\"customerEmail\":\"%s\",\"machine\":\"%s\",\"model\":\"%s\",\"start\":\"%s\",\"end\":\"%s\"}",
+            appt.getAppointmentId(),
+            appt.getCustomerEmail() != null ? appt.getCustomerEmail() : "",
+            appt.getSerialNumber()  != null ? appt.getSerialNumber()  : "",
+            appt.getModelName()     != null ? appt.getModelName()     : "",
+            appt.getStartDate(), appt.getEndDate()
+        );
 
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                "http://localhost:8080/mock/notify",
-                payload,
-                Map.class
-            );
+        notificationService.queue(appt.getAppointmentId(), appt.getCustomerId(),
+            "email", "pickup_reminder", payload);
 
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                log.warn("Notification failed for appointmentId={}: HTTP {} from /mock/notify",
-                    id, response.getStatusCode().value());
-            }
-
-            return response.getBody();
-        } catch (Exception e) {
-            log.error("Exception during notification dispatch for appointmentId={}: {}", id, e.getMessage(), e);
-            throw e;
-        }
+        return Map.of("status", "queued", "appointmentId", id);
     }
 }
